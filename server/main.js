@@ -23,7 +23,7 @@ Meteor.startup(() => {
   }
   // Fat arrow function cannot be used in Meteor.publish
   // See http://stackoverflow.com/questions/33056884/es6-arrow-function-is-changing-the-scope-of-this-in-meteor-publish
-  Meteor.publish('employees', function() {
-    return Employees.find({}, { limit: 20 });
+  Meteor.publish('employees', function(per_page) {
+    return Employees.find({}, { limit: per_page });
   });
 });

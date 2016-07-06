@@ -1,20 +1,41 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Employees } from '../../imports/collections/employees';
+import EmployeeDetail from './employee_detail';
 
-const EmployeesList = () => {
-  return (
-    <div>
-      <div className="employee-list">
-        Employee List
-      </div>
-    </div>
-  );
+const PER_PAGE = 20;
+
+class EmployeeList extends Component {
+
+  componentWillMount() {
+    this.page = 1;
+  }
+
+  handleButtonClick() {
+    Meteor.subscribe('employees', PER_PAGE * (this.page + 1));
+    this.page += 1;
+  }
+    render() {
+      // props.employees => an array of employee objects
+      return (
+        <div>
+          <div className="employee-list">
+            {this.props.employees.map(employee =>
+              <EmployeeDetail key={employee._id} employee={employee} />
+            )}
+          </div>
+          <button onClick={this.handleButtonClick.bind(this)}
+            className="btn btn-primary">
+            Load More...
+          </button>
+        </div>
+      );
+  };
 };
 
 export default createContainer(() => {
   // setup suscription
-  Meteor.subscribe('employees');
+  Meteor.subscribe('employees', PER_PAGE);
 
   // return an object. What ever we reaturn will be sent to EmployeesList
   // as props
